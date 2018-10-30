@@ -4,25 +4,21 @@ const  app = express();
 const PORT = 8080;
 const bodyParser = require('body-parser');
 
- app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.set('view engine', 'ejs');
 
-const urlDatabase = {
+function generateRandomString() {
+  let random = '';
+  const characterList = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwyxz0123456789';
+  for(var i = 0; i < 6; i++) {
+    random += characterList.charAt(Math.floor(Math.random() * characterList.length));
+  }
+  return random;
+}
+let urlDatabase = {
   b2xVn2: 'http://www.lighthouselabs.ca',
-  '9sm5xK': 'http://www.google.com'
+  '9sm5xK': 'http://www.google.com',
 };
-
-app.get('/', (request, response) => {
-  response.send('Hello!');
-});
-
-app.get('/urls.json', (request, response) => {
-  response.json(urlDatabase);
-});
-
-app.get('/hello', (request, response) => {
-  response.send('<html><body>Hello <b>World</b></body></html>\n');
-});
 
 app.get('/urls', (request, response) => {
   let templateVar = { urls: urlDatabase };
@@ -38,11 +34,12 @@ app.get('/urls/:id', (request, response) => {
     shortURL: request.params.id,
     longURL: urlDatabase
   };
-  response.render('urls_show', templateVar);
+  response.render('/urls/:id', templateVar);
 });
 
 app.post('/urls/urls', (request, response) => {
-  response.send('OK');
+  urlDatabase[generateRandomString()] = request.body.longURL;
+  response.send(urlDatabase);
 });
 
 app.listen(PORT, () => {
