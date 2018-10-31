@@ -48,11 +48,11 @@ app.get('/u/:shortURL', (request, response) => {
   response.redirect(urlDatabase[longURL]);
 });
 
-app.post('/urls/:shortURL/delete', (request, response) => {
-  delete request.params.shortURL;
+app.post('/urls/:id/delete', (request, response) => {
+  const id = request.params.id;
+  delete urlDatabase[id];
   response.redirect('/urls');
 });
-
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
