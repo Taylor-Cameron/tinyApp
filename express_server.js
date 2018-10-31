@@ -19,40 +19,45 @@ let urlDatabase = {
   b2xVn2: 'http://www.lighthouselabs.ca',
   '9sm5xK': 'http://www.google.com',
 };
-
+// brings me to delete/ edit page with list of databse
 app.get('/urls', (request, response) => {
   let templateVar = { urls: urlDatabase };
   response.render('urls_index', templateVar);
 });
-
+// main page to put in a long url
 app.get('/urls/new', (request, response) => {
   response.render('urls_new');
 });
-
+//brings to edit page for specific short url
 app.get('/urls/:id', (request, response) => {
-  let templateVar = {
-    shortURL: request.params.id,
-    longURL: urlDatabase
-  };
-  response.render('/urls/:id', templateVar);
+  let id = request.params.id;
+  let templateVar = { urls: urlDatabase };
+  response.render('urls_show', templateVar);
 });
 
-app.post('/urls/urls', (request, response) => {
-  urlDatabase[generateRandomString()] = request.body.longURL;
-  response.send(urlDatabase);
-});
-
-app.get('/u/:shortURL', (request, response) => {
-  let longURL = request.params.shortURL;
-  console.log(longURL);
-  response.redirect(urlDatabase[longURL]);
-});
+// app.post('/urls/urls', (request, response) => {
+//   urlDatabase[generateRandomString()] = request.body.longURL;
+//   response.send(urlDatabase);
+// });
 
 app.post('/urls/:id/delete', (request, response) => {
   const id = request.params.id;
   delete urlDatabase[id];
   response.redirect('/urls');
 });
+app.post('/urls/:id/updateRequest', (request, response) => {
+  const id =  request.params.id;
+  let templateVar = { shortURL: id};
+  response.render('urls_show', templateVar);
+});
+
+app.post('/urls/:id/update', (request, response) => {
+  let id = request.params.id;
+  urlDatabase[id] = request.body.longURL;
+  response.redirect('/urls');
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
