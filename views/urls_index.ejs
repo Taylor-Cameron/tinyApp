@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html lang = 'en'>
+<html lang='en'>
+
 <head>
-  <title>TinyApp</title>
+  <% include partials/_header %>
 </head>
+
 <body>
-  <header>
-    <% include ../partials/_header %>
-  </header>
   <main>
-      <h2> <%= shortURL %> <%= longURL %> </h2>
+    <h2>url Database</h2>
+      <% Object.keys(urls).forEach(function (key) { %>
+        <li> <%= key %>: <%= urls[key] %></li>
+      <% }); %>
+
   </main>
 </body>
 </html>
