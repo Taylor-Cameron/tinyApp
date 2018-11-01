@@ -1,0 +1,76 @@
+
+randomNumberGenerator = function() {
+  let random = "";
+  const characterList ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwyxz0123456789';
+  for (var i = 0; i < 6; i++) {
+    random += characterList.charAt(
+      Math.floor(Math.random() * characterList.length)
+    );
+  }
+  return random;
+};
+
+let urlDatabase = {
+  b2xVn2: "http://www.lighthouselabs.ca",
+  "9sm5xK": "http://www.google.com"
+};
+
+exports.urlListPage = function(request, response) {
+  let templateVar = {
+    username: request.cookies["username"],
+    urls: urlDatabase
+  };
+  response.render("urls_index", templateVar);
+};
+
+exports.urlNewEntry = function(request, response) {
+  templateVar = {
+    username: request.cookies["username"]
+  };
+  response.render("urls_new", templateVar);
+};
+
+exports.addUrlToListPage = function(request, response) {
+  urlDatabase[randomNumberGenerator()] = request.body.longURL;
+  response.redirect("/urls");
+};
+
+exports.shortUrlPage = function (request, response) {
+  let templateVar = {
+    username: request.cookies['username'],
+    urls: urlDatabase
+  };
+  response.render('urls_show', templateVar);
+};
+
+exports.urlDelete = function(request, response) {
+  const id = request.params.id;
+  delete urlDatabase[id];
+  response.redirect("/urls");
+};
+
+exports.updateRequestPage = function (request, response) {
+  const id = request.params.id;
+  let templateVar = {
+    username: request.cookies['username'],
+    shortURL: id
+  };
+  response.render('urls_show', templateVar);
+}
+
+exports.updateLongUrl = function(request, response) {
+  let id = request.params.id;
+  urlDatabase[id] = request.body.longURL;
+  response.redirect("/urls");
+};
+
+exports.login = function (request, response) {
+  let username = request.body.username;
+  response.cookie('username', username);
+  response.redirect('/urls');
+};
+
+exports.logout = function(request, response) {
+  response.clearCookie("username");
+  response.redirect("/urls");
+};

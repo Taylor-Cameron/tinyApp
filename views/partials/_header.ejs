@@ -4,5 +4,20 @@
 </head>
 <body>
   <h2>TinyApp</h2>
+  <% if(username) { %>
+    <h3>
+      Hello
+      <%= username %>
+      <form method='post' action='/logout'>
+        <input type='submit' value='Logout'>
+      </form>
+    </h3>
+    <% } else { %>
+      <form method="post" action="/login">
+        <label for='username'>username:</label>
+        <input id='username' type='text' name='username' placeholder='username' style='width: 200px'>
+        <input type='submit' value='Login'>
+      </form>
+        <% } %>
 </body>
 </html>
