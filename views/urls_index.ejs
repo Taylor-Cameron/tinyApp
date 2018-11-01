@@ -5,6 +5,9 @@
 </head>
 <body>
   <main>
+    <form method='POST' action='/urls/create'>
+      <input type='submit', value='Create New short url'>
+    </form>
     <h2>url Database</h2>
       <% Object.keys(urls).forEach(function (key) { %>
         <li>
@@ -13,7 +16,7 @@
           <input type='submit', value='Delete 🗑️'>
           </form>
           <form method='POST' action='/urls/<%= key %>/updateRequest'>
-            <input type='submit' , value='Update'>
+            <input type='submit', value='Update'>
           </form>
         </li>
       <% }); %>

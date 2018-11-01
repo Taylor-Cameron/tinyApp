@@ -1,6 +1,6 @@
 
 randomNumberGenerator = function() {
-  let random = "";
+  let random = '';
   const characterList ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwyxz0123456789';
   for (var i = 0; i < 6; i++) {
     random += characterList.charAt(
@@ -11,28 +11,28 @@ randomNumberGenerator = function() {
 };
 
 let urlDatabase = {
-  b2xVn2: "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b2xVn2: 'http://www.lighthouselabs.ca',
+  '9sm5xK': 'http://www.google.com'
 };
 
 exports.urlListPage = function(request, response) {
   let templateVar = {
-    username: request.cookies["username"],
+    username: request.cookies['username'],
     urls: urlDatabase
   };
-  response.render("urls_index", templateVar);
+  response.render('urls_index', templateVar);
 };
 
 exports.urlNewEntry = function(request, response) {
-  templateVar = {
-    username: request.cookies["username"]
+  let templateVar = {
+    username: request.cookies['username']
   };
-  response.render("urls_new", templateVar);
+  response.render('urls_new', templateVar);
 };
 
 exports.addUrlToListPage = function(request, response) {
   urlDatabase[randomNumberGenerator()] = request.body.longURL;
-  response.redirect("/urls");
+  response.redirect('/urls');
 };
 
 exports.shortUrlPage = function (request, response) {
@@ -46,7 +46,7 @@ exports.shortUrlPage = function (request, response) {
 exports.urlDelete = function(request, response) {
   const id = request.params.id;
   delete urlDatabase[id];
-  response.redirect("/urls");
+  response.redirect('/urls');
 };
 
 exports.updateRequestPage = function (request, response) {
@@ -56,12 +56,12 @@ exports.updateRequestPage = function (request, response) {
     shortURL: id
   };
   response.render('urls_show', templateVar);
-}
+};
 
 exports.updateLongUrl = function(request, response) {
   let id = request.params.id;
   urlDatabase[id] = request.body.longURL;
-  response.redirect("/urls");
+  response.redirect('/urls');
 };
 
 exports.login = function (request, response) {
@@ -71,6 +71,10 @@ exports.login = function (request, response) {
 };
 
 exports.logout = function(request, response) {
-  response.clearCookie("username");
-  response.redirect("/urls");
+  response.clearCookie('username');
+  response.redirect('/urls');
+};
+
+exports.createNewUrl = function (request, response) {
+  response.redirect('/urls/new');
 };
