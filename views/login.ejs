@@ -10,14 +10,11 @@
       <input type='submit' value='Register'>
     </form>
     <h3>Login</h3>
-    <% if(error) { %>
-      <div><%= error %></div>
-      <% } %>
     <form method="post" action="/login">
       <label for='email'>Email:</label>
-      <input type='text' name='email' placeholder='example@example.com' style='width:150px'>
+      <input type='email' name='email' placeholder='example@example.com' style='width:150px'>
       <label for='password'>Password:</label>
-      <input type='text' name='password' placeholder='Password'>
+      <input type='password' name='password' placeholder='Password'>
       <input type='submit' value='Login'>
     </form>
 </body>

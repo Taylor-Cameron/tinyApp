@@ -6,15 +6,16 @@
   <header>
     <h2>TinyApp</h2>
     <h3>Registration</h3>
+    <a href='/login'> Login</a>
   </header>
   <% if(error) { %>
     <div><%= error %></div>
     <% } %>
   <form method='post' action='/register' style='margin: 50px'>
     <label for='email'>Email:</label>
-    <input type='text' name='email' placeholder='example@example.com' style='width:150px'>
+    <input type='email' name='email' placeholder='example@example.com' style='width:150px'>
     <label for='password'>Password:</label>
-    <input type='text' name='password' placeholder='Password'>
+    <input type='password' name='password' placeholder='Password'>
     <input type='submit' value='Register'>
   </form>
   <main>

@@ -10,12 +10,20 @@ const randomNumberGenerator = function() {
   return random;
 };
 
+const usersDatabase = {
+  abc: {
+    id: 'abc',
+    email: 'abc@123.com',
+    password: '1234'
+  }
+};
 let urlDatabase = {
-  b2xVn2: 'http://www.lighthouselabs.ca',
-  '9sm5xK': 'http://www.google.com'
+  xVy6Lx: {
+    url: 'https://web.compass.lighthouselabs.ca/days/w02d2/activities/180',
+    user: usersDatabase.id
+  }
 };
 
-const usersDatabase = {};
 
 
 function doesEmailExist(email) {
@@ -34,13 +42,17 @@ function doesPasswordExist(password) {
   }
 }
 
-
 exports.urlListPage = function(request, response) {
-  let templateVar = {
-    user: urlDatabase[request.cookies['user_id']],
-    urls: urlDatabase
-  };
-  response.render('urls_index', templateVar);
+  let userID = usersDatabase[request.cookies['user_id']];
+  if(userID) {
+    let templateVar = {
+      user: userID,
+      urls: urlDatabase
+    };
+    response.render('urls_index', templateVar);
+  } else {
+    response.redirect('/login');
+  }
 };
 
 exports.addUserToUserDatabase = function(request, response) {
@@ -69,17 +81,10 @@ exports.addUserToUserDatabase = function(request, response) {
 };
 
 exports.shortUrlPage = function (request, response) {
-  let templateVar = {
-    user: usersDatabase[request.cookies['user_id']],
-    urls: urlDatabase
-  };
-  response.render('urls_show', templateVar);
-};
-
-exports.updateRequestPage = function (request, response) {
+  let userID =  usersDatabase[request.cookies['user_id']];
   const id = request.params.id;
   let templateVar = {
-    user: usersDatabase[request.cookies['user_id']],
+    user: userID,
     shortURL: id
   };
   response.render('urls_show', templateVar);
@@ -100,16 +105,25 @@ exports.registerUser = function (request, response) {
 };
 
 exports.urlNewEntry = function (request, response) {
-  let templateVar = {
-    user: usersDatabase[request.cookies['user_id']]
-  };
-  response.render('urls_new', templateVar);
+  let userID = usersDatabase[request.cookies['user_id']];
+  if(userID) {
+    let templateVar = {
+      user: userID
+    };
+    response.render('urls_new', templateVar);
+  } else {
+    response.redirect('/login');
+  }
 };
 
 // *****************redirects
 
 exports.addUrlToListPage = function (request, response) {
-  urlDatabase[randomNumberGenerator()] = request.body.longURL;
+  let userID = usersDatabase[request.cookies['user_id']];
+  urlDatabase[randomNumberGenerator()] = {
+    url: request.body.longURL,
+    user: userID.id
+  };
   response.redirect('/urls');
 };
 
@@ -121,7 +135,7 @@ exports.urlDelete = function (request, response) {
 
 exports.updateLongUrl = function (request, response) {
   let id = request.params.id;
-  urlDatabase[id] = request.body.longURL;
+  urlDatabase[id].url = request.body.longURL;
   response.redirect('/urls');
 };
 
@@ -138,9 +152,6 @@ exports.userLogin = function (request, response) {
     response.cookie('user_id', id);
     response.redirect('/urls/new');
   } else {
-    const templateVar = {
-      error: 'password or email does not match your credentials, or Register an account.'
-    };
-    response.render('login', templateVar);
+    response.redirect('/register');
   }
 };
