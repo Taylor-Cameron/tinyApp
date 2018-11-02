@@ -83,11 +83,24 @@ exports.addUserToUserDatabase = function(request, response) {
 exports.shortUrlPage = function (request, response) {
   let userID =  usersDatabase[request.cookies['user_id']];
   const id = request.params.id;
-  let templateVar = {
+  if(userID) {
+    let templateVar = {
+      user: userID,
+      shortURL: id
+    };
+    response.render('urls_show', templateVar);
+  } else {
+    response.redirect('/login');
+  }
+};
+
+exports.homePage = function(request, response) {
+  let userID = usersDatabase[request.cookies['user_id']];
+  const templateVar = {
     user: userID,
-    shortURL: id
+    urls: urlDatabase
   };
-  response.render('urls_show', templateVar);
+  response.render('homePage', templateVar);
 };
 
 exports.loginPage = function (request, response) {
