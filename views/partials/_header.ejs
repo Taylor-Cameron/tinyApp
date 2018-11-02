@@ -4,20 +4,16 @@
 </head>
 <body>
   <h2>TinyApp</h2>
-  <% if(username) { %>
-    <h3>
-      Logged in as:
-      <%= username %>
-      <form method='post' action='/logout'>
+    <h3 style='display: flex; align-items: center;'>
+      <form method='post' action='/logout' style='margin: 5px'>
         <input type='submit' value='Logout'>
       </form>
-    </h3>
-    <% } else { %>
-      <form method="post" action="/login">
-        <label for='username'>username:</label>
-        <input id='username' type='text' name='username' placeholder='username' style='width: 200px'>
+      <form method='post' action='/register' style='margin: 5px'>
+        <input type='submit' value='Register'>
+      </form>
+      <form method='post' action='/login' style='margin: 5px'>
         <input type='submit' value='Login'>
       </form>
-        <% } %>
+    </h3>
 </body>
 </html>

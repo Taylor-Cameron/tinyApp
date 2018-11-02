@@ -1,5 +1,5 @@
 
-randomNumberGenerator = function() {
+const randomNumberGenerator = function() {
   let random = '';
   const characterList ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwyxz0123456789';
   for (var i = 0; i < 6; i++) {
@@ -15,66 +15,132 @@ let urlDatabase = {
   '9sm5xK': 'http://www.google.com'
 };
 
+const usersDatabase = {};
+
+
+function doesEmailExist(email) {
+  for(var key in usersDatabase) {
+    if(usersDatabase[key].email === email) {
+      return key;
+    }
+  }
+}
+
+function doesPasswordExist(password) {
+  for (var key in usersDatabase) {
+    if (usersDatabase[key].password === password) {
+      return key;
+    }
+  }
+}
+
+
 exports.urlListPage = function(request, response) {
   let templateVar = {
-    username: request.cookies['username'],
+    user: urlDatabase[request.cookies['user_id']],
     urls: urlDatabase
   };
   response.render('urls_index', templateVar);
 };
 
-exports.urlNewEntry = function(request, response) {
-  let templateVar = {
-    username: request.cookies['username']
-  };
-  response.render('urls_new', templateVar);
-};
-
-exports.addUrlToListPage = function(request, response) {
-  urlDatabase[randomNumberGenerator()] = request.body.longURL;
-  response.redirect('/urls');
+exports.addUserToUserDatabase = function(request, response) {
+  const id = randomNumberGenerator();
+  let email = request.body.email;
+  let password = request.body.password;
+  if (doesEmailExist(email)) {
+    const templateVar = {
+      error: 'email already in use, please use a different email.'
+    };
+    response.render('user_registration', templateVar);
+  } else if (email && password) {
+    usersDatabase[id]= {
+      id: id,
+      email: email,
+      password: password
+    };
+    response.cookie('user_id', id);
+    response.redirect('/urls');
+  } else {
+    const templateVar = {
+      error: 'email and password are required to register.'
+    };
+    response.render('user_registration', templateVar);
+  }
 };
 
 exports.shortUrlPage = function (request, response) {
   let templateVar = {
-    username: request.cookies['username'],
+    user: usersDatabase[request.cookies['user_id']],
     urls: urlDatabase
   };
   response.render('urls_show', templateVar);
 };
 
-exports.urlDelete = function(request, response) {
-  const id = request.params.id;
-  delete urlDatabase[id];
-  response.redirect('/urls');
-};
-
 exports.updateRequestPage = function (request, response) {
   const id = request.params.id;
   let templateVar = {
-    username: request.cookies['username'],
+    user: usersDatabase[request.cookies['user_id']],
     shortURL: id
   };
   response.render('urls_show', templateVar);
 };
 
-exports.updateLongUrl = function(request, response) {
+exports.loginPage = function (request, response) {
+  let templateVar = {
+    error: undefined
+  };
+  response.render('login', templateVar);
+};
+
+exports.registerUser = function (request, response) {
+  let templateVar = {
+    error: undefined
+  };
+  response.render('user_registration', templateVar);
+};
+
+exports.urlNewEntry = function (request, response) {
+  let templateVar = {
+    user: usersDatabase[request.cookies['user_id']]
+  };
+  response.render('urls_new', templateVar);
+};
+
+// *****************redirects
+
+exports.addUrlToListPage = function (request, response) {
+  urlDatabase[randomNumberGenerator()] = request.body.longURL;
+  response.redirect('/urls');
+};
+
+exports.urlDelete = function (request, response) {
+  const id = request.params.id;
+  delete urlDatabase[id];
+  response.redirect('/urls');
+};
+
+exports.updateLongUrl = function (request, response) {
   let id = request.params.id;
   urlDatabase[id] = request.body.longURL;
   response.redirect('/urls');
 };
 
-exports.login = function (request, response) {
-  let username = request.body.username;
-  response.cookie('username', username);
-  response.redirect('/urls');
-};
-
 exports.logout = function(request, response) {
-  response.clearCookie('username');
-  response.redirect('/urls');
+  response.clearCookie('user_id');
+  response.redirect('/login');
 };
 
-exports.createNewUrl = function (request, response) {
-  response.redirect('/urls/new');
+exports.userLogin = function (request, response) {
+  let email = request.body.email;
+  let password = request.body.password;
+  const id = doesEmailExist(email) && doesPasswordExist(password);
+  if (id) {
+    response.cookie('user_id', id);
+    response.redirect('/urls/new');
+  } else {
+    const templateVar = {
+      error: 'password or email does not match your credentials, or Register an account.'
+    };
+    response.render('login', templateVar);
+  }
 };

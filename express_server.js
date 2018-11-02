@@ -12,6 +12,6 @@ app.set('view engine', 'ejs');
 app.use('/', routes);
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`listening on port ${PORT}!`);
 });
 
