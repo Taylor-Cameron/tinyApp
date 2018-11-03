@@ -153,3 +153,10 @@ exports.userLogin = function (request, response) {
     response.redirect('/register');
   }
 };
+
+exports.redirectToWebsite = function (request, response){
+  let id= request.params.shortURL;
+  console.log(id);
+  let longURL = urlDatabase[id].url;
+  response.redirect(longURL);
+};

@@ -21,6 +21,8 @@ router.get('/urls', control.urlListPage);
 
 router.post('/urls', control.addUrlToListPage);
 
+router.get('/u/:shortURL', control.redirectToWebsite);
+
 //renders a registration page for new users to sign-up
 router.get('/register', control.registerUser);
 
