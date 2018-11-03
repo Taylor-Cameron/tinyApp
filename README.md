@@ -17,3 +17,8 @@
   * basic css implimented on individual pages
   * use of text-align, background color and text-style
 
+## final product
+
+!["Screenshot of homepage"](https://github.com/Taylor-Cameron/tinyApp/blob/master/docs/mainpage.png)
+
+!["Screenshot of urls page"](https://github.com/Taylor-Cameron/tinyApp/blob/master/docs/urlspage.png)
