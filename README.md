@@ -22,3 +22,16 @@
 !["Screenshot of homepage"](https://github.com/Taylor-Cameron/tinyApp/blob/master/docs/mainpage.png)
 
 !["Screenshot of urls page"](https://github.com/Taylor-Cameron/tinyApp/blob/master/docs/urlspage.png)
+
+## Dependencies
+* Node.js
+* Express
+* EJS
+* bcrypt
+* body-parser
+* cookie-session
+
+## Getting started
+* install all dependencies (using `npm install` command)
+* run the development web server using `node express_server.js` command.
+
