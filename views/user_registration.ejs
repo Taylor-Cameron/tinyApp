@@ -1,13 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <style type="text/css">
+      h2 {
+        text-align: center;
+        font-size: 30pt;
+        font-style: italic;
+        margin-bottom: 10px
+      }
+
+      h3 {
+        text-align: center;
+        font-size: 15pt;
+        margin-bottom: 20px
+      }
+
+      h4 {
+        text-align: center;
+        font-size: 12pt;
+        align-items: center;
+      }
+
+      body {
+        background-color: #cee1ff
+      }
+    </style>
 </head>
 <body>
   <header>
     <h2>TinyApp</h2>
     <h3>Registration</h3>
+    <h4>
     <a href='/login'> Login</a>
+    </h4>
   </header>
+  <main>
+  <h4>
   <% if(error) { %>
     <div><%= error %></div>
     <% } %>
@@ -18,7 +46,7 @@
     <input type='password' name='password' placeholder='Password'>
     <input type='submit' value='Register'>
   </form>
-  <main>
-  </main>
+  </h4>
+</main>
 </body>
 </html>

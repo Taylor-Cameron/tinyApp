@@ -5,15 +5,18 @@
 </head>
 <body>
   <main>
+    <h3>
     <form action='/urls' method='POST'>
       <label for='longURL'>shorten a new URL:</label>
       <input id='longURL' type='text' name='longURL' placeholder='http://' style='width: 300px'>
       <input type='submit' value='Submit'>
     </form>
+    </h3>
     <h2>url Database</h2>
+    <h4>
       <% Object.keys(urls).forEach(function (key) { %>
         <% if(urls[key].user === user.id) { %>
-        <li style='display: flex; align-items: center;'>
+        <li>
           <a href='<%= urls[key].url %>'><%= key %></a> → <%= urls[key].url %>
           <form method='POST' action='/urls/<%= key %>/delete' style='margin: 5px'>
           <input type='submit', value='Delete 🗑️'>
@@ -24,6 +27,7 @@
         </li>
         <% } %>
       <% }); %>
+    </h4>
   </main>
 </body>
 </html>

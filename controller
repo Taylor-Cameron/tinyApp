@@ -142,7 +142,7 @@ exports.logout = function(request, response) {
 };
 
 exports.userLogin = function (request, response) {
-  const bcrypt = require("bcrypt");
+  const bcrypt = require('bcrypt');
   let email = request.body.email;
   let password = request.body.password;
   const id = doesEmailExist(email);
