@@ -1,44 +1,41 @@
 const express = require('express');
 const router = express.Router();
 const control = require('./controller');
+var cookieSession = require('cookie-session');
+router.use(
+  cookieSession({
+    name: 'session',
+    keys: ['gggw2'],
+  })
+);
 
 router.get('/', control.homePage);
 
-//*************
-router.get('/urls', control.urlListPage);
-// ************************
-
-router.get('/urls/new', control.urlNewEntry);
-// *******************
-
-router.get('/urls/:id', control.shortUrlPage);
-
-// *******************
-
-router.get('/register', control.registerUser);
-// *********************
-
+//renders login page and allows for login with email and password
 router.get('/login', control.loginPage);
+
+router.post('/login', control.userLogin);
+
+//renders a list of urls you have shortened an allows to shorten new URLS
+router.get('/urls', control.urlListPage);
 
 router.post('/urls', control.addUrlToListPage);
 
-// *********************
+//renders a registration page for new users to sign-up
+router.get('/register', control.registerUser);
+
+router.post('/register', control.addUserToUserDatabase);
+
+//new short url page used to shorten urls
+router.get('/urls/new', control.urlNewEntry);
+
+//various buttons/pages that allow for better functionality of the website.
+router.post('/urls/:id', control.shortUrlPage);
 
 router.post('/urls/:id/delete', control.urlDelete);
 
-// ****************
-
 router.post('/urls/:id/update', control.updateLongUrl);
 
-// *************
-router.post('/login', control.userLogin);
-
-// *****************
-
 router.post('/logout', control.logout);
-
-// ***************
-
-router.post('/register', control.addUserToUserDatabase);
 
 module.exports = router;

@@ -1,4 +1,4 @@
-
+//creates the random tag for the shortURL
 const randomNumberGenerator = function() {
   let random = '';
   const characterList ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwyxz0123456789';
@@ -10,22 +10,10 @@ const randomNumberGenerator = function() {
   return random;
 };
 
-const usersDatabase = {
-  abc: {
-    id: 'abc',
-    email: 'abc@123.com',
-    password: '1234'
-  }
-};
-let urlDatabase = {
-  xVy6Lx: {
-    url: 'https://web.compass.lighthouselabs.ca/days/w02d2/activities/180',
-    user: usersDatabase.id
-  }
-};
+const usersDatabase = {};
+let urlDatabase = {};
 
-
-
+//function to check if the email is present in the userDatabase
 function doesEmailExist(email) {
   for(var key in usersDatabase) {
     if(usersDatabase[key].email === email) {
@@ -34,16 +22,10 @@ function doesEmailExist(email) {
   }
 }
 
-function doesPasswordExist(password) {
-  for (var key in usersDatabase) {
-    if (usersDatabase[key].password === password) {
-      return key;
-    }
-  }
-}
+//these functions render pages
 
 exports.urlListPage = function(request, response) {
-  let userID = usersDatabase[request.cookies['user_id']];
+  let userID = usersDatabase[request.session.user_id];
   if(userID) {
     let templateVar = {
       user: userID,
@@ -55,8 +37,11 @@ exports.urlListPage = function(request, response) {
   }
 };
 
+//used for registration page, uses if statements to ensure it is filled out properly
+//uses bcrypt and session cookies for enhances security
 exports.addUserToUserDatabase = function(request, response) {
   const id = randomNumberGenerator();
+  const bcrypt = require('bcrypt');
   let email = request.body.email;
   let password = request.body.password;
   if (doesEmailExist(email)) {
@@ -68,9 +53,9 @@ exports.addUserToUserDatabase = function(request, response) {
     usersDatabase[id]= {
       id: id,
       email: email,
-      password: password
+      password: bcrypt.hashSync(password, 10)
     };
-    response.cookie('user_id', id);
+    request.session.user_id = id;
     response.redirect('/urls');
   } else {
     const templateVar = {
@@ -81,7 +66,7 @@ exports.addUserToUserDatabase = function(request, response) {
 };
 
 exports.shortUrlPage = function (request, response) {
-  let userID =  usersDatabase[request.cookies['user_id']];
+  let userID =  usersDatabase[request.session.user_id];
   const id = request.params.id;
   if(userID) {
     let templateVar = {
@@ -95,7 +80,7 @@ exports.shortUrlPage = function (request, response) {
 };
 
 exports.homePage = function(request, response) {
-  let userID = usersDatabase[request.cookies['user_id']];
+  let userID = usersDatabase[request.session.user_id];
   const templateVar = {
     user: userID,
     urls: urlDatabase
@@ -118,7 +103,7 @@ exports.registerUser = function (request, response) {
 };
 
 exports.urlNewEntry = function (request, response) {
-  let userID = usersDatabase[request.cookies['user_id']];
+  let userID = usersDatabase[request.session.user_id];
   if(userID) {
     let templateVar = {
       user: userID
@@ -129,10 +114,10 @@ exports.urlNewEntry = function (request, response) {
   }
 };
 
-// *****************redirects
+//these functions redirect to a new page
 
 exports.addUrlToListPage = function (request, response) {
-  let userID = usersDatabase[request.cookies['user_id']];
+  let userID = usersDatabase[request.session.user_id];
   urlDatabase[randomNumberGenerator()] = {
     url: request.body.longURL,
     user: userID.id
@@ -153,16 +138,16 @@ exports.updateLongUrl = function (request, response) {
 };
 
 exports.logout = function(request, response) {
-  response.clearCookie('user_id');
   response.redirect('/login');
 };
 
 exports.userLogin = function (request, response) {
+  const bcrypt = require("bcrypt");
   let email = request.body.email;
   let password = request.body.password;
-  const id = doesEmailExist(email) && doesPasswordExist(password);
-  if (id) {
-    response.cookie('user_id', id);
+  const id = doesEmailExist(email);
+  if (id && bcrypt.compareSync(password, usersDatabase[id].password)) {
+    request.session.user_id = id;
     response.redirect('/urls/new');
   } else {
     response.redirect('/register');

@@ -12,7 +12,7 @@
     </form>
     <h2>url Database</h2>
       <% Object.keys(urls).forEach(function (key) { %>
-        <% if(user.id === urls[key].user) { %>
+        <% if(urls[key].user === user.id) { %>
         <li style='display: flex; align-items: center;'>
           <a href='<%= urls[key].url %>'><%= key %></a> → <%= urls[key].url %>
           <form method='POST' action='/urls/<%= key %>/delete' style='margin: 5px'>
